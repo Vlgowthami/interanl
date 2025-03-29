@@ -1,0 +1,105 @@
+import java.util.*;
+
+class MaxHeap {
+    int[] A;
+    int maxSize, heapsize;
+
+    MaxHeap(int ms) {
+        this.maxSize = ms;
+        A = new int[ms];
+        heapsize = 0;
+    }
+
+    int Lchild(int i) {
+        return 2 * i + 1;
+    }
+
+    int Rchild(int i) {
+        return 2 * i + 2;
+    }
+
+    int Parent(int i) {
+        return (i - 1) / 2;
+    }
+
+    void insertKey(int x) {
+        if (heapsize == maxSize) {
+            System.out.println("Heap overflow");
+            return;
+        }
+        int i = heapsize;
+        A[i] = x;
+        heapsize++;
+
+        while (i != 0 && A[Parent(i)] < A[i]) {
+            int temp = A[i];
+            A[i] = A[Parent(i)];
+            A[Parent(i)] = temp;
+            i = Parent(i);
+        }
+    }
+
+    void removeMax() {
+        if (heapsize <= 0) {
+            System.out.println("Heap is empty");
+            return;
+        }
+        if (heapsize == 1) {
+            heapsize--;
+        } else {
+            A[0] = A[heapsize - 1];
+            heapsize--;
+            heapify(0);
+        }
+    }
+
+    void heapify(int i) {
+        int l = Lchild(i);
+        int r = Rchild(i);
+        int largest = i;
+
+        if (l < heapsize && A[l] > A[largest]) {
+            largest = l;
+        }
+
+        if (r < heapsize && A[r] > A[largest]) {
+            largest = r;
+        }
+
+        if (largest != i) {
+            int temp = A[i];
+            A[i] = A[largest];
+            A[largest] = temp;
+            heapify(largest);
+        }
+    }
+
+    int getMax() {
+        return A[0];
+    }
+
+    int curSize() {
+        return heapsize;
+    }
+
+    public static void main(String[] args) {
+        MaxHeap h = new MaxHeap(15);
+        int elements[] = {3, 10, 12, 8, 2, 14};
+
+        for (int e : elements)
+            h.insertKey(e);
+
+        System.out.println("The current size of the heap is " + h.curSize());
+        System.out.println("The current maximum element is " + h.getMax());
+
+        h.removeMax();
+
+        System.out.println("The current size of the heap is " + h.curSize());
+
+        h.insertKey(20);
+        h.insertKey(25);
+
+        System.out.println("The current size of the heap is " + h.curSize());
+        System.out.println("The current maximum element is " + h.getMax());
+    }
+}

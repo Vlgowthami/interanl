@@ -1,0 +1,45 @@
+import java.util.*;
+
+public class DijkstraAM {
+    
+    public static void dijkstra(int V, int[][] graph, int source) {
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[source] = 0;
+        
+        boolean[] processed = new boolean[V];
+        
+        for (int i = 0; i < V; i++) {
+            int u = -1;
+            for (int j = 0; j < V; j++) {
+                if (!processed[j] && (u == -1 || dist[j] < dist[u])) u = j;
+            }
+            
+            processed[u] = true;
+            
+            for (int v = 0; v < V; v++) {
+                if (graph[u][v] != Integer.MAX_VALUE && !processed[v])
+                    dist[v] = Math.min(dist[v], dist[u] + graph[u][v]);
+            }
+        }
+        
+        for (int i = 0; i < V; i++)
+            System.out.println("Node " + i + ": " + (dist[i] == Integer.MAX_VALUE ? "unreachable" : dist[i]));
+    }
+
+    public static void main(String[] args) {
+        int V = 5;
+        int[][] graph = new int[V][V];
+        
+        for (int i = 0; i < V; i++) Arrays.fill(graph[i], Integer.MAX_VALUE);
+        for (int i = 0; i < V; i++) graph[i][i] = 0;
+        
+        graph[0][1] = 10; graph[0][4] = 5;
+        graph[1][2] = 1; graph[1][4] = 2;
+        graph[2][3] = 4;
+        graph[3][0] = 7; graph[3][2] = 6;
+        graph[4][1] = 3; graph[4][2] = 9;
+
+        dijkstra(V, graph, 0);  // Run Dijkstra from source node 0
+    }
+}
